@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -15,7 +14,8 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      height: 100vh;
+      min-height: 100vh;
+      text-align: center;
     }
 
     canvas {
@@ -26,52 +26,50 @@
     }
 
     .container {
-      text-align: center;
       z-index: 10;
       padding: 20px;
-      background-color: rgba(255, 255, 255, 0.15);
+      background-color: rgba(255, 255, 255, 0.1);
       border-radius: 20px;
       backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .polaroid {
       background: white;
-      padding: 10px 10px 40px 10px;
-      border-radius: 10px;
-      width: 300px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.5);
+      padding: 20px 20px 60px 20px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 0 30px rgba(255,255,255,0.5);
       cursor: pointer;
       transition: transform 0.3s;
     }
 
     .polaroid:hover {
-      transform: scale(1.05);
+      transform: scale(1.03);
     }
 
     .polaroid img {
       width: 100%;
-      border-radius: 5px;
+      border-radius: 10px;
     }
 
     .caption {
-      margin-top: 10px;
-      font-size: 14px;
+      margin-top: 15px;
+      font-size: 16px;
       color: #333;
       font-weight: bold;
     }
 
     .text-below {
-      margin-top: 30px;
-      font-size: 18px;
+      margin-top: 40px;
+      font-size: 20px;
       color: white;
-      max-width: 600px;
+      max-width: 800px;
       padding: 0 20px;
-    }
-
-    .hint {
-      font-size: 14px;
-      margin-top: 10px;
-      color: #ffb6c1;
+      line-height: 1.6;
     }
   </style>
 </head>
@@ -93,6 +91,7 @@
   const canvas = document.getElementById('heartCanvas');
   const ctx = canvas.getContext('2d');
   let hearts = [];
+  let miniExplosions = [];
 
   function resize() {
     canvas.width = window.innerWidth;
@@ -102,13 +101,14 @@
   window.addEventListener('resize', resize);
   resize();
 
-  function createHeart() {
+  function createHeart(x = Math.random() * canvas.width, y = -20, size = 10 + Math.random() * 20, speed = 1 + Math.random() * 3) {
     return {
-      x: Math.random() * canvas.width,
-      y: -20,
-      size: 10 + Math.random() * 20,
-      speed: 1 + Math.random() * 3,
-      alpha: 0.5 + Math.random() * 0.5
+      x,
+      y,
+      size,
+      speed,
+      alpha: 0.5 + Math.random() * 0.5,
+      explode: false,
     };
   }
 
@@ -130,18 +130,74 @@
     ctx.restore();
   }
 
+  function createMiniHearts(x, y) {
+    const miniHearts = [];
+    for (let i = 0; i < 15; i++) {
+      miniHearts.push({
+        x,
+        y,
+        size: 5 + Math.random() * 5,
+        speedX: (Math.random() - 0.5) * 4,
+        speedY: (Math.random() - 0.5) * 4,
+        alpha: 1,
+        life: 60
+      });
+    }
+    return miniHearts;
+  }
+
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // adicionar corações
     if (Math.random() < 0.3) {
       hearts.push(createHeart());
     }
+
+    // desenhar e mover corações
     hearts.forEach((heart, i) => {
       heart.y += heart.speed;
       drawHeart(heart.x, heart.y, heart.size, heart.alpha);
+
       if (heart.y > canvas.height) hearts.splice(i, 1);
     });
+
+    // desenhar mini explosões
+    miniExplosions.forEach((group, groupIndex) => {
+      group.forEach((mini, i) => {
+        mini.x += mini.speedX;
+        mini.y += mini.speedY;
+        mini.alpha -= 0.02;
+        mini.life--;
+        drawHeart(mini.x, mini.y, mini.size, mini.alpha);
+
+        if (mini.life <= 0) {
+          group.splice(i, 1);
+        }
+      });
+
+      if (group.length === 0) {
+        miniExplosions.splice(groupIndex, 1);
+      }
+    });
+
     requestAnimationFrame(animate);
   }
+
+  // Função para criar e explodir 4 corações
+  function explodeBigHearts() {
+    for (let i = 0; i < 4; i++) {
+      const x = Math.random() * canvas.width * 0.9 + 20;
+      const y = Math.random() * canvas.height * 0.5 + 50;
+
+      // desenha o coração grande (explosivo)
+      drawHeart(x, y, 35, 1);
+      miniExplosions.push(createMiniHearts(x, y));
+    }
+  }
+
+  // chama a função de explosão a cada 5 segundos
+  setInterval(explodeBigHearts, 5000);
 
   animate();
 
