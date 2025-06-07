@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Para o amor da minha vida</title>
+  <title>Para minha criança</title>
   <style>
     body {
       margin: 0;
@@ -71,6 +72,22 @@
       padding: 0 20px;
       line-height: 1.6;
     }
+
+    .spotify-button {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      background-color: #1DB954;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      font-family: Arial, sans-serif;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
   </style>
 </head>
 <body>
@@ -87,11 +104,14 @@
   </div>
 </div>
 
+<a class="spotify-button" href="https://open.spotify.com/track/2QjOHCTQ1Jl3zawyYOpxh6?si=1WfTbEetS4efBHymh8n-gw" target="_blank">
+  🎵 Ouvir "Sweater Weather" no Spotify
+</a>
+
 <script>
   const canvas = document.getElementById('heartCanvas');
   const ctx = canvas.getContext('2d');
   let hearts = [];
-  let miniExplosions = [];
 
   function resize() {
     canvas.width = window.innerWidth;
@@ -101,14 +121,13 @@
   window.addEventListener('resize', resize);
   resize();
 
-  function createHeart(x = Math.random() * canvas.width, y = -20, size = 10 + Math.random() * 20, speed = 1 + Math.random() * 3) {
+  function createHeart(x = Math.random() * canvas.width, y = -20, size = 20 + Math.random() * 30, speed = 1 + Math.random() * 2) {
     return {
       x,
       y,
       size,
       speed,
       alpha: 0.5 + Math.random() * 0.5,
-      explode: false,
     };
   }
 
@@ -130,27 +149,11 @@
     ctx.restore();
   }
 
-  function createMiniHearts(x, y) {
-    const miniHearts = [];
-    for (let i = 0; i < 15; i++) {
-      miniHearts.push({
-        x,
-        y,
-        size: 5 + Math.random() * 5,
-        speedX: (Math.random() - 0.5) * 4,
-        speedY: (Math.random() - 0.5) * 4,
-        alpha: 1,
-        life: 60
-      });
-    }
-    return miniHearts;
-  }
-
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // adicionar corações
-    if (Math.random() < 0.3) {
+    // adicionar corações continuamente
+    if (Math.random() < 0.7) {
       hearts.push(createHeart());
     }
 
@@ -162,42 +165,8 @@
       if (heart.y > canvas.height) hearts.splice(i, 1);
     });
 
-    // desenhar mini explosões
-    miniExplosions.forEach((group, groupIndex) => {
-      group.forEach((mini, i) => {
-        mini.x += mini.speedX;
-        mini.y += mini.speedY;
-        mini.alpha -= 0.02;
-        mini.life--;
-        drawHeart(mini.x, mini.y, mini.size, mini.alpha);
-
-        if (mini.life <= 0) {
-          group.splice(i, 1);
-        }
-      });
-
-      if (group.length === 0) {
-        miniExplosions.splice(groupIndex, 1);
-      }
-    });
-
     requestAnimationFrame(animate);
   }
-
-  // Função para criar e explodir 4 corações
-  function explodeBigHearts() {
-    for (let i = 0; i < 4; i++) {
-      const x = Math.random() * canvas.width * 0.9 + 20;
-      const y = Math.random() * canvas.height * 0.5 + 50;
-
-      // desenha o coração grande (explosivo)
-      drawHeart(x, y, 35, 1);
-      miniExplosions.push(createMiniHearts(x, y));
-    }
-  }
-
-  // chama a função de explosão a cada 5 segundos
-  setInterval(explodeBigHearts, 5000);
 
   animate();
 
@@ -212,10 +181,6 @@
     isColor = !isColor;
   }
 </script>
-<div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10; text-align: center;">
-  <a href="https://open.spotify.com/track/2QjOHCTQ1Jl3zawyYOpxh6?si=1WfTbEetS4efBHymh8n-gw" target="_blank" style="background-color: #1DB954; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; font-family: sans-serif; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: background 0.3s;">
-    🎧 Ouvir no Spotify
-  </a>
-</div>
+
 </body>
 </html>
