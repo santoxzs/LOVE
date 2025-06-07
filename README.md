@@ -212,6 +212,10 @@
     isColor = !isColor;
   }
 </script>
-
+<div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10; text-align: center;">
+  <a href="https://open.spotify.com/track/2QjOHCTQ1Jl3zawyYOpxh6?si=1WfTbEetS4efBHymh8n-gw" target="_blank" style="background-color: #1DB954; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; font-family: sans-serif; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: background 0.3s;">
+    🎧 Ouvir no Spotify
+  </a>
+</div>
 </body>
 </html>
