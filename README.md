@@ -104,9 +104,6 @@
   </div>
 </div>
 
-<a class="spotify-button" href="https://open.spotify.com/track/2QjOHCTQ1Jl3zawyYOpxh6?si=1WfTbEetS4efBHymh8n-gw" target="_blank">
-  🎵 Ouvir "Sweater Weather" no Spotify
-</a>
 
 <script>
   const canvas = document.getElementById('heartCanvas');
