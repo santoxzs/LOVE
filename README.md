@@ -73,21 +73,7 @@
       line-height: 1.6;
     }
 
-    .spotify-button {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 100;
-      background-color: #1DB954;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 30px;
-      text-decoration: none;
-      font-weight: bold;
-      font-family: Arial, sans-serif;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
+  
   </style>
 </head>
 <body>
